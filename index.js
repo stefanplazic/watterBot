@@ -9,9 +9,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(logger('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+/*app.use(cors());
 app.use(mongoSanitize());
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -19,7 +19,7 @@ app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
     next();
-});
+});*/
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -53,16 +53,15 @@ app.post('/webhook', (req, res) => {
 
 });
 
-// Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
 
     // Your verify token. Should be a random string.
-    let VERIFY_TOKEN = "aaaaa"
+    let VERIFY_TOKEN = "watterBot"
 
     // Parse the query params
     let mode = req.query['hub.mode'];
     let token = req.query['hub.verify_token'];
-    let challenge = req.query['hub.challenge'];
+    let challenge = req.query['challenge'];
 
     // Checks if a token and mode is in the query string of the request
     if (mode && token) {
