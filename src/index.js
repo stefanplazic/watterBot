@@ -80,20 +80,51 @@ app.get('/webhook', (req, res) => {
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
-    let response;
+    let response = [];
 
     // Check if the message contains text
     if (received_message.text) {
+        const textEntered = received_message.text.toLowerCase();
 
-
-        // Create the payload for a basic text message
-        response = {
-            "text": `Thanks for messaging us. We try to be as responsive as possible. We'll get back to you soon.`
+        if (textEntered === 'menu' || textEntered === 'back') {
+            response.push({
+                "text": "Wellcome to this super menu",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Info",
+                        "payload": "action@info"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "Change alerts",
+                        "payload": "action@ChangeAlerts"
+                    }
+                ]
+            });
         }
+        else if (textEntered === 'info') {
+           
+            response.push({
+                "text": "Thank you for asking such a cool question! 🙂 I am the best waterbot ever writen. My author is Stefan Plazic",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Back",
+                        "payload": "action@back"
+                    }
+                ]
+            });
+        }
+        else
+            // Create the payload for a basic text message
+            response.push({
+                "text": `Sorry I am a stupid bot, if you have any questions type Menu`
+            });
     }
 
 
-    callSendAPI(sender_psid, response);
+    response.forEach(async (item) => { await callSendAPI(sender_psid, item); });
 }
 
 // Handles messaging_postbacks events
@@ -102,39 +133,33 @@ function handlePostback(sender_psid, received_postback) {
 
     // Get the payload for the postback
     let payload = received_postback.payload;
-
+   
     // Set the response based on the postback payload
     if (payload === 'action@getStarted') {
         response.push({ "text": "Hi Stefan! I will be your personal water trainer 🙂 you can call me Shakira 💧" });
-        response.push({ "text": "What I can do for you? ☑  Daily water reminders ☑  Personalized AI recommendations ☑  Number of cups of water drank this week ☑  Tips about water drinking" });
-        
-        /*response.push({
-            "attachment": {
-                "type": "template",
-                "payload": {
-                    "template_type": "generic",
-                    "elements": [{
+        response.push({ "text": "What I can do for you? ☑  Daily water reminders \n ☑  Personalized AI recommendations\n ☑  Number of cups of water drank this week\n ☑  Tips about water drinking" });
 
-                        "buttons": [
-                            {
-                                "type": "postback",
-                                "title": "Let's get going 🤘",
-                                "payload": "action@letGoing",
-                            }
-                        ],
-                    }]
+        response.push({
+            "text": "Are you ready for this journey?",
+            "quick_replies": [
+                {
+                    "content_type": "text",
+                    "title": "Let's dig in",
+                    "payload": "action@digIn"
                 }
-            }
-        });*/
+            ]
+        }
+        );
 
     }
+
     // Send the message to acknowledge the postback
-    response.forEach((item) => { callSendAPI(sender_psid, item); });
+    response.forEach(async (item) => { await callSendAPI(sender_psid, item); });
 
 }
 
 // Sends response messages via the Send API
-function callSendAPI(sender_psid, response) {
+async function callSendAPI(sender_psid, response) {
     // Construct the message body
     let request_body = {
         "recipient": {
@@ -149,7 +174,7 @@ function callSendAPI(sender_psid, response) {
             "method": "POST",
             "json": request_body
         });
-        console.log(rep);
+
     }
     catch (err) {
         console.error(err);
