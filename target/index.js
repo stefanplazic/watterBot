@@ -23,7 +23,7 @@ var _morgan2 = _interopRequireDefault(_morgan);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 1337;
 
 app.use((0, _morgan2.default)('dev'));
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
@@ -34,7 +34,7 @@ app.use((0, _expressMongoSanitize2.default)());
 app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
-    res.json({ "tutorial": "Build REST API with node.js" });
+    res.json({ "tutorial": "Build REST API   aadfwith node.js" });
 });
 
 /*create a test webhook*/
@@ -77,7 +77,7 @@ app.get('/webhook', function (req, res) {
     if (mode && token) {
 
         // Checks the mode and token sent is correct
-        if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+        if (token === VERIFY_TOKEN) {
 
             // Responds with the challenge token from the request
             console.log('WEBHOOK_VERIFIED');
