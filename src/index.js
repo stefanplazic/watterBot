@@ -85,17 +85,51 @@ function handleMessage(sender_psid, received_message) {
     // Check if the message contains text
     if (received_message.text) {
 
+
         // Create the payload for a basic text message
         response = {
-            "text": `Hello. Please type Menu for more info`
+            "text": `Thanks for messaging us. We try to be as responsive as possible. We'll get back to you soon.`
         }
     }
+
 
     callSendAPI(sender_psid, response);
 }
 
 // Handles messaging_postbacks events
 function handlePostback(sender_psid, received_postback) {
+    let response = [];
+
+    // Get the payload for the postback
+    let payload = received_postback.payload;
+
+    // Set the response based on the postback payload
+    if (payload === 'action@getStarted') {
+        response.push({ "text": "Hi Stefan! I will be your personal water trainer 🙂 you can call me Shakira 💧" });
+        response.push({ "text": "What I can do for you? ☑  Daily water reminders ☑  Personalized AI recommendations ☑  Number of cups of water drank this week ☑  Tips about water drinking" });
+        
+        /*response.push({
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type": "generic",
+                    "elements": [{
+
+                        "buttons": [
+                            {
+                                "type": "postback",
+                                "title": "Let's get going 🤘",
+                                "payload": "action@letGoing",
+                            }
+                        ],
+                    }]
+                }
+            }
+        });*/
+
+    }
+    // Send the message to acknowledge the postback
+    response.forEach((item) => { callSendAPI(sender_psid, item); });
 
 }
 
