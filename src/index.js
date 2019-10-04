@@ -30,7 +30,7 @@ app.post('/webhook', (req, res) => {
             // Gets the message. entry.messaging is an array, but 
             // will only ever contain one message, so we get index 0
             let webhook_event = entry.messaging[0];
-            console.log(webhook_event);
+            //console.log(webhook_event);
 
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
@@ -86,6 +86,7 @@ function handleMessage(sender_psid, received_message) {
     if (received_message.text) {
         const textEntered = received_message.text.toLowerCase();
 
+
         if (textEntered === 'menu' || textEntered === 'back') {
             response.push({
                 "text": "Wellcome to this super menu",
@@ -116,6 +117,69 @@ function handleMessage(sender_psid, received_message) {
                 ]
             });
         }
+        else if (textEntered === 'change alerts') {
+
+            response.push({
+                "text": "Ok let's get rolling! 🙂 Tell us how many cups of watter you drink daily?",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "1-2 cups",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "3-5 cup",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "6 or more cup",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "don't count",
+                        "payload": "action@cup"
+                    }
+                ]
+            })
+        }
+        else if (textEntered === '1-2 cups' || textEntered === "don't count") {
+
+            response.push({
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": "Whats wrong with you?",
+                            
+                            "image_url": "https://townsquare.media/site/295/files/2015/01/Loser-630x420.jpg?w=980&q=75",
+                            
+                        }]
+                    }
+                }
+            })
+        }
+        else if (textEntered === '3-5 cup' || textEntered === "6 or more cup") {
+
+            response.push({
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": "Congratualions you are a great person!",
+                            
+                            "image_url": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/584748de-c26e-4434-beb8-393f80645804/d35chph-1aacba54-dc38-4396-abba-9e8e53906a66.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU4NDc0OGRlLWMyNmUtNDQzNC1iZWI4LTM5M2Y4MDY0NTgwNFwvZDM1Y2hwaC0xYWFjYmE1NC1kYzM4LTQzOTYtYWJiYS05ZThlNTM5MDZhNjYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.5RIH9tF1VPclyztlUZIZ0YCD7O6QIfuOd7OeQW30BOw",
+                            
+                        }]
+                    }
+                }
+            })
+        }
+
         else if (textEntered === "let's dig in") {
             response.push({
                 "text": "Ok let's get rolling! 🙂 Tell us how many cups of watter you drink daily?",
@@ -163,6 +227,7 @@ function handlePostback(sender_psid, received_postback) {
 
     // Set the response based on the postback payload
     if (payload === 'action@getStarted') {
+
         response.push({ "text": "Hi Stefan! I will be your personal water trainer 🙂 you can call me Shakira 💧" });
         response.push({ "text": "What I can do for you? ☑  Daily water reminders \n ☑  Personalized AI recommendations\n ☑  Number of cups of water drank this week\n ☑  Tips about water drinking" });
 
@@ -184,6 +249,20 @@ function handlePostback(sender_psid, received_postback) {
     response.forEach(async (item) => { await callSendAPI(sender_psid, item); });
 
 }
+
+//get user Info
+const userInfo = async (sender_psid) => {
+
+    try {
+        const rep = await request.get("https://graph.facebook.com/" + sender_psid + "?fields=first_name&access_token=" + PAGE_ACCESS_TOKEN);
+        console.log(rep);
+
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
 
 // Sends response messages via the Send API
 async function callSendAPI(sender_psid, response) {
