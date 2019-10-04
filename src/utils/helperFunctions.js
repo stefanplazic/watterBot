@@ -1,27 +1,15 @@
 import request from 'request-promise';
 const PAGE_ACCESS_TOKEN = 'EAAipPa65D7sBADDa5nK4qSIPk9VjS0GPaTIUjIDr6bMf5Ns6OHGR3ZBOYt4eH5kTZCcClCK8C24O9ac2iWNfy44eIvDcvvcAfXhGNlYyEwAgBxlXbveYTj8ewrDn6b2dc227z5n6w4UbeivPAmTXkBVbOyKFETL4Ge7kmiPQZDZD';
+import Participant from '../models/participants';
 
-// Sends response messages via the Send API
-export async function callBradcast(response) {
-    // Construct the message body
-    let request_body = {
-        "recipient": {
-            "id": sender_psid
-        },
-        "message": response
-    }
-    try {
-        await request({
-            "uri": "https://graph.facebook.com/v2.6/me/messages",
-            "qs": { "access_token": PAGE_ACCESS_TOKEN },
-            "method": "POST",
-            "json": request_body
-        });
 
-    }
-    catch (err) {
-        console.error(err);
-    }
+
+export async function callBradcast(message) {
+    const response = { "text": message };
+    const participants = await Participant.find();
+    participants.forEach((participant) => {
+        callSendAPI(participant.psid, response);
+    });
 }
 
 // Sends response messages via the Send API

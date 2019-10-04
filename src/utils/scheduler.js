@@ -1,16 +1,13 @@
 import cron from 'node-cron';
 import Participant from '../models/participants';
 import Reminder from '../models/reminders';
-import { callSendAPI } from './helperFunctions';
+import { callSendAPI, callBradcast } from './helperFunctions';
 
 
 const schedule = async () => {
 
     try {
-
-        /*const newReminder = new Reminder({label:'2 times a day',cron:'0 6,12,20 * * *'});
-        await newReminder.save();*/
-        //find all reminders in database
+        callBradcast('A water drinking and health style news are coming soon');
         const result = await Reminder.find();
         result.forEach((reminder) => {
             cron.schedule(reminder.cron, async () => {
