@@ -104,7 +104,7 @@ function handleMessage(sender_psid, received_message) {
             });
         }
         else if (textEntered === 'info') {
-           
+
             response.push({
                 "text": "Thank you for asking such a cool question! 🙂 I am the best waterbot ever writen. My author is Stefan Plazic",
                 "quick_replies": [
@@ -112,6 +112,33 @@ function handleMessage(sender_psid, received_message) {
                         "content_type": "text",
                         "title": "Back",
                         "payload": "action@back"
+                    }
+                ]
+            });
+        }
+        else if (textEntered === "let's dig in") {
+            response.push({
+                "text": "Ok let's get rolling! 🙂 Tell us how many cups of watter you drink daily?",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "1-2 cups",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "3-5 cup",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "6 or more cup",
+                        "payload": "action@cup"
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "don't count",
+                        "payload": "action@cup"
                     }
                 ]
             });
@@ -133,7 +160,7 @@ function handlePostback(sender_psid, received_postback) {
 
     // Get the payload for the postback
     let payload = received_postback.payload;
-   
+
     // Set the response based on the postback payload
     if (payload === 'action@getStarted') {
         response.push({ "text": "Hi Stefan! I will be your personal water trainer 🙂 you can call me Shakira 💧" });
