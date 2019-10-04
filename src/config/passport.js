@@ -1,13 +1,14 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const passportJWT = require("passport-jwt");
+import passport from 'passport';
+import passportLocal from 'passport-local';
+import passportJWT from 'passport-jwt';
+import jwt from 'jsonwebtoken';
+import UserModel from '../models/users.js';
+import databaseConfig from './databaseConfig';
+
+const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const jwt = require('jsonwebtoken');
-const UserModel = require('../models/users.js');
-const SECRET_KEY = require('./databaseconfig').secretKey;
-//singup
-
+const SECRET_KEY = databaseConfig.secretKey;
 
 //login 
 passport.use('login', new LocalStrategy({
@@ -50,5 +51,33 @@ passport.use(new JWTStrategy({
             .catch(err => {
                 return done(err);
             });
+    }
+));
+
+//singup
+passport.use('singup', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+},
+    async function (req, email, password, done) {
+
+        try {
+            process.nextTick(async function () {
+                const user = await UserModel.findOne({ email });
+                if (user)
+                    return done(null, false, { message: 'Email allready taken' })
+
+                //create user
+                var newUser = new UserModel();
+                newUser.email = email;
+                newUser.password = password;
+                await newUser.save();
+                //everything is ok
+                return done(null, newUser);
+            });
+        }
+
+        catch (err) { done(err); }
     }
 ));

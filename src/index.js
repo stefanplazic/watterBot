@@ -3,16 +3,27 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import logger from 'morgan';
 import request from 'request-promise';
+import mongoose from 'mongoose';
+import databaseConfig from './config/databaseConfig';
+import usersController from './controllers/users.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 const PAGE_ACCESS_TOKEN = 'EAAipPa65D7sBADDa5nK4qSIPk9VjS0GPaTIUjIDr6bMf5Ns6OHGR3ZBOYt4eH5kTZCcClCK8C24O9ac2iWNfy44eIvDcvvcAfXhGNlYyEwAgBxlXbveYTj8ewrDn6b2dc227z5n6w4UbeivPAmTXkBVbOyKFETL4Ge7kmiPQZDZD';
+
+require('./config/passport');
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+mongoose.connect(databaseConfig.mongoDbUrl, { keepAlive: 300000, connectTimeoutMS: 30000, useNewUrlParser: true, useUnifiedTopology: true });
+var conn = mongoose.connection;
+conn.on('error', console.error.bind(console, 'connection error:'));
+
+app.use('/users', usersController);
 
 /*create a test webhook*/
 // Creates the endpoint for our webhook 
@@ -119,27 +130,22 @@ function handleMessage(sender_psid, received_message) {
         else if (textEntered === 'change alerts') {
 
             response.push({
-                "text": "Ok let's get rolling! 🙂 Tell us how many cups of watter you drink daily?",
+                "text": "Ok let's get rolling! 🙂 Choose the frequency for water break reminders",
                 "quick_replies": [
                     {
                         "content_type": "text",
-                        "title": "1-2 cups",
-                        "payload": "action@cup"
+                        "title": "Once a day",
+                        "payload": "action@onceReminder"
                     },
                     {
                         "content_type": "text",
-                        "title": "3-5 cup",
-                        "payload": "action@cup"
+                        "title": "Two times a day",
+                        "payload": "action@twoReminder"
                     },
                     {
                         "content_type": "text",
-                        "title": "6 or more cup",
-                        "payload": "action@cup"
-                    },
-                    {
-                        "content_type": "text",
-                        "title": "don't count",
-                        "payload": "action@cup"
+                        "title": "Three times a day",
+                        "payload": "action@threeReminder"
                     }
                 ]
             })
@@ -307,6 +313,29 @@ const userInfo = async (sender_psid) => {
 
 // Sends response messages via the Send API
 async function callSendAPI(sender_psid, response) {
+    // Construct the message body
+    let request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "message": response
+    }
+    try {
+        await request({
+            "uri": "https://graph.facebook.com/v2.6/me/messages",
+            "qs": { "access_token": PAGE_ACCESS_TOKEN },
+            "method": "POST",
+            "json": request_body
+        });
+
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
+// Sends response messages via the Send API
+async function callBradcast(response) {
     // Construct the message body
     let request_body = {
         "recipient": {
