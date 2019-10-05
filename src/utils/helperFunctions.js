@@ -1,8 +1,7 @@
 import request from 'request-promise';
 const PAGE_ACCESS_TOKEN = 'EAAipPa65D7sBADDa5nK4qSIPk9VjS0GPaTIUjIDr6bMf5Ns6OHGR3ZBOYt4eH5kTZCcClCK8C24O9ac2iWNfy44eIvDcvvcAfXhGNlYyEwAgBxlXbveYTj8ewrDn6b2dc227z5n6w4UbeivPAmTXkBVbOyKFETL4Ge7kmiPQZDZD';
 import Participant from '../models/participants';
-
-
+import Message from '../models/messages';
 
 export async function callBradcast(message) {
     const response = { "text": message };
@@ -51,7 +50,7 @@ export function handlePostback(sender_psid, received_postback) {
             "text": "Hi ! I will be your personal water trainer 🙂 you can call me Shakira 💧",
         });
         response.push({
-            "text": "What I can do for you? ☑  Daily water reminders \n ☑  Personalized AI recommendations\n ☑  Number of cups of water drank this week\n ☑  Tips about water drinkingv",
+            "text": "What I can do for you? ☑  Daily water reminders \n ☑  Personalized AI recommendations\n ☑  Tips about water drinking",
 
         });
         response.push({
@@ -65,6 +64,35 @@ export function handlePostback(sender_psid, received_postback) {
             ]
         });
 
+    }
+}
+
+// Update message
+export async function updateBotMessage(action, text, quickReplies) {
+    // Construct the message body
+    try {
+        let content = {};
+
+        //put quick replies
+        let quickRep = [];
+        quickReplies.forEach((replay) => {
+            const repl = {
+                "content_type": "text",
+                "title": replay,
+                "payload": "action@drank"
+            }
+            quickRep.push(repl);
+        });
+        content = { "text": text, "quick_replies": quickRep };
+
+        //save to message
+        let messageSaved = await Message.findOne({ action: action });
+        messageSaved.content = content;
+        messageSaved = await messageSaved.save();
+        console.log(messageSaved);
+    }
+    catch (err) {
+        console.error(err);
     }
 }
 
