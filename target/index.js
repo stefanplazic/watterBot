@@ -55,7 +55,7 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 app.use('/', _chats2.default);
 app.use('/users', _users2.default);
 
-//scheduler();
+(0, _scheduler2.default)();
 //listen to the port
 app.listen(port, function () {
   console.log('Node server listening on port ' + port);

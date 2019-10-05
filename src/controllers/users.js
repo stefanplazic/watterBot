@@ -6,6 +6,12 @@ const router = express.Router();
 
 router
 
+    .get('/', async (req, res, next) => {
+
+        res.send({ success: true, message: 'hi' });
+
+
+    })
     .post('/login', passport.authenticate('login', { session: false }), async (req, res, next) => {
 
         res.send({ success: true, jwt: req.user });

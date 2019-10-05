@@ -14,7 +14,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var router = _express2.default.Router();
 
-router.post('/login', _passport2.default.authenticate('login', { session: false }), async function (req, res, next) {
+router.get('/', async function (req, res, next) {
+
+    res.send({ success: true, message: 'hi' });
+}).post('/login', _passport2.default.authenticate('login', { session: false }), async function (req, res, next) {
 
     res.send({ success: true, jwt: req.user });
 }).post('/register', _passport2.default.authenticate('jwt', { session: false }), _passport2.default.authenticate('singup', { session: false }), async function (req, res, next) {

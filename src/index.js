@@ -28,7 +28,7 @@ app.use('/', chatsController);
 app.use('/users', usersController);
 
 
-//scheduler();
+scheduler();
 //listen to the port
 app.listen(port, () => { console.log('Node server listening on port ' + port); });
 
