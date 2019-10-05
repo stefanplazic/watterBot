@@ -61,7 +61,7 @@ router.post('/webhook', (req, res) => {
     });
 
 // Handles messages events
-function handleMessage(sender_psid, received_message) {
+async function handleMessage(sender_psid, received_message) {
     let response = [];
 
     // Check if the message contains text
@@ -123,7 +123,7 @@ function handleMessage(sender_psid, received_message) {
             })
         }
         else if (textEntered === '1-2 cups' || textEntered === "don't count") {
-
+            
             response.push({
                 "attachment": {
                     "type": "template",
@@ -161,10 +161,8 @@ function handleMessage(sender_psid, received_message) {
             });
         }
         else if (textEntered === '3-5 cup' || textEntered === "6 or more cup") {
-
-
-
-
+            //save number of cups to user
+            
             response.push({
                 "attachment": {
                     "type": "template",
@@ -241,7 +239,7 @@ function handlePostback(sender_psid, received_postback) {
 
     // Set the response based on the postback payload
     if (payload === 'action@getStarted') {
-        //save Participants
+        //find participants
         var newParticipant = new Participant({ psid: sender_psid });
         newParticipant.save();
         response.push({

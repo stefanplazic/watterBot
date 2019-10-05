@@ -8,10 +8,7 @@ const ParticipantSchema = new Schema({
         required: true,
         uniqe: true
     },
-    cups: {
-        type: String,
 
-    },
     frequency: {
         type: String,
 
