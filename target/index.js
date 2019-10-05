@@ -20,10 +20,6 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _databaseConfig = require('./config/databaseConfig');
-
-var _databaseConfig2 = _interopRequireDefault(_databaseConfig);
-
 var _users = require('./controllers/users.js');
 
 var _users2 = _interopRequireDefault(_users);
@@ -31,6 +27,10 @@ var _users2 = _interopRequireDefault(_users);
 var _chats = require('./controllers/chats');
 
 var _chats2 = _interopRequireDefault(_chats);
+
+var _databaseConfig = require('./config/databaseConfig');
+
+var _databaseConfig2 = _interopRequireDefault(_databaseConfig);
 
 var _scheduler = require('./utils/scheduler');
 

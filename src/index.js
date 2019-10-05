@@ -3,9 +3,9 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import logger from 'morgan';
 import mongoose from 'mongoose';
-import databaseConfig from './config/databaseConfig';
 import usersController from './controllers/users.js';
 import chatsController from './controllers/chats';
+import databaseConfig from './config/databaseConfig';
 import scheduler from './utils/scheduler';
 
 const app = express();
