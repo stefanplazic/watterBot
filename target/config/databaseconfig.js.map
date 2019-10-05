@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/config/databaseconfig.js"],"names":[],"mappings":";;;;;kBAAe;AACX,iBAAa,YADF;AAEX,kBAAc;AAFH,C","file":"databaseconfig.js","sourcesContent":["export default {\r\n    \"secretKey\": \"tajnikljuc\",\r\n    \"mongoDbUrl\": 'mongodb+srv://stefan:patkapatka!12@cluster0-ndl6g.mongodb.net/test?retryWrites=true&w=majority'\r\n}\r\n"]}

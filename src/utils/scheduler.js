@@ -5,7 +5,7 @@ import { callSendAPI } from './helperFunctions';
 import Message from '../models/messages';
 
 const schedule = async () => {
-    dummy();
+
     try {
 
         const result = await Reminder.find();
