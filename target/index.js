@@ -48,6 +48,8 @@ app.use(_bodyParser2.default.urlencoded({ extended: true }));
 app.use(_bodyParser2.default.json());
 app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 
+app.set('view engine', 'ejs');
+
 _mongoose2.default.connect(_databaseConfig2.default.mongoDbUrl, { keepAlive: 300000, connectTimeoutMS: 30000, useNewUrlParser: true, useUnifiedTopology: true });
 var conn = _mongoose2.default.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
@@ -55,9 +57,17 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 app.use('/', _chats2.default);
 app.use('/users', _users2.default);
 
+app.get('/login', function (req, res) {
+    res.render('login');
+});
+
+app.get('/dashboard', function (req, res) {
+    res.render('dashboard');
+});
+
 (0, _scheduler2.default)();
 //listen to the port
 app.listen(port, function () {
-  console.log('Node server listening on port ' + port);
+    console.log('Node server listening on port ' + port);
 });
 //# sourceMappingURL=index.js.map
