@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script>
+        if (localStorage.getItem("jwt")) {
+            window.location.replace("/dashboard");
+        }
+
+        UserAction = () => {
+
+            const url = "/users/login";
+            const data = {
+                'email': document.getElementById('email').value,
+                'password': document.getElementById('password').value
+            };
+
+            const other_params = {
+                headers: { "content-type": "application/json; charset=UTF-8" },
+                body: JSON.stringify(data),
+                method: "POST"
+            };
+
+            fetch(url, other_params)
+                .then(async (response) => {
+                    if (response.ok) {
+                        const promise = await response.json();
+                        localStorage.setItem("jwt", promise.jwt);
+                        //redirect
+                        window.location.replace("/dashboard");
+
+                    } else {
+                        alert(response.statusText);
+                    }
+                });
+            return false;
+        }
+    </script>
+</head>
+
+<body class="container">
+
+
+
+    <main>
+        <center>
+            <h1>Login</h1>
+            <input type="text" placeholder="Email" id="email"><br><br>
+            <input type="password" placeholder="Password" id="password"><br><br>
+            <input type="button" value="Login" onclick="UserAction()"><br>
+
+        </center>
+    </main>
+
+
+
+</body>
+
+</html>

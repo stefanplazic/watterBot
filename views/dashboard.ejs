@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script>
+        if (!localStorage.getItem("jwt")) {
+            window.location.replace("/dashboard");
+        }
+
+        //function for logout
+        logout = () => {
+            localStorage.clear();
+            window.location.replace("/login");
+        }
+
+        UserAction = () => {
+
+            const url = "/users/broadcast";
+            const jwt = localStorage.getItem("jwt");
+            const data = {
+                'message': document.getElementById('message').value
+            };
+
+            const other_params = {
+                headers: { "content-type": "application/json; charset=UTF-8", 'Authorization': "Bearer " + jwt, },
+                body: JSON.stringify(data),
+                method: "POST"
+            };
+
+            fetch(url, other_params)
+                .then(async (response) => {
+                    if (response.ok) {
+                        const promise = await response.json();
+                        localStorage.setItem("jwt", promise.jwt);
+                        //redirect
+                        window.location.replace("/dashboard");
+
+                    } else {
+                        alert(response.statusText);
+                    }
+                });
+            return false;
+        }
+    </script>
+</head>
+
+<body class="container">
+
+
+
+    <main>
+        <center>
+            <h1>Dashboard</h1>
+            <a href="javascript:;" onclick="logout();">logout</a>
+            <br />
+            <input type="text" placeholder="Your message" id="message" />
+            <input type="button" value="Send to everyone" onclick="UserAction()" />
+        </center>
+    </main>
+</body>
+
+</html>
